@@ -1,0 +1,55 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/14273l/Descent-library/refs/heads/main/Library"))()
+
+local Watermark = Library:Watermark({ Name = "descendant" })
+local KeybindList = Library:KeybindList()
+
+local Window = Library:Window({ Name = "descendant.lua" })
+
+local Combat = Window:Page({ Name = "Combat" })
+local Visuals = Window:Page({ Name = "Visuals" })
+local Misc = Window:Page({ Name = "Misc" })
+
+local RageBot = Combat:Section({ Name = "RageBot", Side = 1 }) do
+    RageBot:Toggle({ Name = "Enabled", Flag = "rage_enabled" }):Keybind({ Name = "ragebot", Flag = "rage_bind" })
+
+    RageBot:Slider({ Name = "Hit chance", Flag = "rage_hitchance", Min = 0, Max = 100, Default = 50, Suffix = "%" })
+    RageBot:Dropdown({ Name = "Hitbox", Flag = "rage_hitbox", Items = { "Head", "Torso", "Arms", "Legs" }, Default = "Head" })
+    RageBot:Dropdown({ Name = "Multipoint", Flag = "rage_multipoint", Items = { "Head", "Torso", "Arms", "Legs" }, Default = { "Head" }, Multi = true })
+end
+
+local Aim = Combat:Section({ Name = "Aim", Side = 2 }) do
+    local Silent = Aim:Tab({ Name = "Silent Aim" })
+    Silent:Toggle({ Name = "Enabled", Flag = "silent_enabled" })
+    Silent:Slider({ Name = "Hit chance", Flag = "silent_hitchance", Min = 0, Max = 100, Default = 100, Suffix = "%" })
+    Silent:Dropdown({ Name = "Target part", Flag = "silent_part", Items = { "Head", "HumanoidRootPart" }, Default = 1 })
+
+    local Fov = Aim:Tab({ Name = "Fov" })
+    Fov:Toggle({ Name = "Show fov", Flag = "fov_show" }):Colorpicker({ Flag = "fov_color", Default = Color3.fromRGB(236, 171, 95) })
+    Fov:Slider({ Name = "Radius", Flag = "fov_radius", Min = 10, Max = 800, Default = 120, Suffix = "px" })
+end
+
+local Esp = Visuals:Section({ Name = "Esp", Side = 1 }) do
+    local Boxes = Esp:Toggle({ Name = "Boxes", Flag = "esp_boxes" })
+    Boxes:Colorpicker({ Flag = "esp_boxes_color", Default = Color3.fromRGB(255, 255, 255) })
+
+    local BoxSettings = Boxes:Settings()
+    BoxSettings:Dropdown({ Name = "Style", Flag = "esp_boxes_style", Items = { "Full", "Corner" }, Default = "Corner" })
+    BoxSettings:Slider({ Name = "Thickness", Flag = "esp_boxes_thickness", Min = 1, Max = 4, Default = 1 })
+
+    Esp:Toggle({ Name = "Names", Flag = "esp_names" })
+    Esp:Toggle({ Name = "Health bar", Flag = "esp_health" })
+end
+
+local Other = Misc:Section({ Name = "Other", Side = 1 }) do
+    Other:Textbox({ Name = "Chat message", Flag = "misc_message", Placeholder = "type here...", Finished = true })
+    Other:Button({
+        Name = "Notify",
+        Callback = function()
+            Library:Notification({ Title = "misc", Name = "message: " .. tostring(Library.Flags.misc_message), Time = 3 })
+        end
+    })
+end
+
+Window:InitWindow()
+
+Library:Notification({ Name = "loaded, press rshift to toggle the menu", Time = 4 })
